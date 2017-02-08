@@ -10,16 +10,16 @@ import mutagen
 
 
 def directory_check(direc):
-    """Determine if the system is running Linux or Windows, then pass file names to name_format for formatting."""
+    """Determine if the system is running Linux or Windows, then pass mp3 file names to name_format for formatting."""
 
-    if 'linux' in platform.system() or 'Linux' in platform.system():
+    if platform.system().lower() == 'linux':
         # If the user forgets to start a directory name with /, add it for them.
         if not direc.startswith('/'):
             direc = '/' + direc
 
         if not direc.endswith('/'):
             direc += '/'
-    elif 'windows' in platform.system() or 'Windows' in platform.system():
+    elif platform.system().lower() == 'windows':
         if '\\' in direc:
             direc = direc.replace('\\', '/')
 
@@ -63,7 +63,7 @@ def directory_check(direc):
 
             name_format(files, direc)
     else:
-        #  Get all of the file names in the specified directory.
+        #  No other folders present. Just get all of the file names in the specified directory.
         try:
             files_init = os.listdir(direc)
             name_format(files_init, direc)
@@ -74,7 +74,7 @@ def directory_check(direc):
 
 def name_format(files, direc):
     """For each file in a directory, extract the <artist name> and <song title> contained in the ID3v2 tag, then
-    format each for valid file renaming on the Linux/Windows file-system.
+    format each to be renamed on the Linux/Windows file-system.
     """
 
     for mp3 in files:
@@ -147,15 +147,17 @@ def rename_file(direc, artist, title, file_name):
 
 
 if __name__ == '__main__':
-    text = ''
-
     if len(sys.argv) == 1:
         print 'Please provide a valid directory.'
+    elif len(sys.argv) == 2:
+        directory_check(sys.argv[1])
     else:
+        text = ''
+
         for k in range(1, len(sys.argv)):
-            if k < len(sys.argv):
+            if k < len(sys.argv) - 1:
                 text += sys.argv[k] + ' '
             else:
                 text += sys.argv[k]
 
-        directory_check(text[:-1])
+        directory_check(text)
