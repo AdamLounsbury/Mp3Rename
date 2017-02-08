@@ -5,7 +5,6 @@ import os
 import codecs
 import platform
 import sys
-import re
 
 import mutagen
 
